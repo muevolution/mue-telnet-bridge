@@ -1,0 +1,38 @@
+{
+  "name": "mue-telnet-bridge",
+  "version": "1.0.0",
+  "description": "MUE Telnet Bridge",
+  "author": "Kauko <kauko@biosynth.link>",
+  "license": "MIT",
+  "main": "build/app.js",
+  "scripts": {
+    "start": "node build/app.js",
+    "debug": "node --inspect build/app.js",
+    "build": "gulp build"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "lodash": "^4.17.4",
+    "mue-client-types": "file:../mue-server/client_types",
+    "nconf": "^0.10.0",
+    "socket.io-client": "^2.0.4",
+    "source-map-support": "^0.5.0",
+    "winston": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.18",
+    "@types/lodash": "^4.14.89",
+    "@types/nconf": "0.0.36",
+    "@types/socket.io-client": "^1.4.32",
+    "@types/winston": "^2.3.7",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-tslint": "^8.1.2",
+    "gulp-typescript": "^3.2.3",
+    "nodemon": "^1.14.3",
+    "tslint": "^5.8.0",
+    "tslint-language-service": "^0.9.7",
+    "typescript": "^2.6.2"
+  }
+}
