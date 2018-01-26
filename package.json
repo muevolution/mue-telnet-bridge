@@ -1,5 +1,5 @@
 {
-  "name": "mue-telnet-bridge",
+  "name": "@mue/telnet-bridge",
   "version": "1.0.0",
   "description": "MUE Telnet Bridge",
   "author": "Kauko <kauko@biosynth.link>",
