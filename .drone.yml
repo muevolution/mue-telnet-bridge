@@ -1,0 +1,52 @@
+pipeline:
+  npm_auth:
+    image: robertstettner/drone-npm-auth
+    registry: https://drone-npm.neocodenetworks.org
+    secrets: [ npm_username, npm_password, npm_email ]
+
+  build:
+    image: node:carbon-alpine
+    commands:
+      - echo "@mue:registry=https://drone-npm.neocodenetworks.org" >> .npmrc
+      - npm install
+      - node_modules/.bin/gulp build
+
+  publish_docker_master:
+    image: plugins/docker
+    registry: drone-registry.neocodenetworks.org
+    repo: drone-registry.neocodenetworks.org/mue/telnet-bridge
+    secrets: [ docker_username, docker_password ]
+    tag: [ latest, master ]
+    when:
+      branch: master
+      event: push
+
+  publish_docker_branch:
+    image: plugins/docker
+    registry: drone-registry.neocodenetworks.org
+    repo: drone-registry.neocodenetworks.org/mue/telnet-bridge
+    secrets: [ docker_username, docker_password ]
+    tag: ${DRONE_BRANCH}
+    when:
+      branch:
+        exclude: master
+      event: push
+
+  publish_docker_tag:
+    image: plugins/docker
+    registry: drone-registry.neocodenetworks.org
+    repo: drone-registry.neocodenetworks.org/mue/telnet-bridge
+    secrets: [ docker_username, docker_password ]
+    tag: ${DRONE_TAG}
+    when:
+      event: tag
+
+  publish_docker_to_prod:
+    image: plugins/docker
+    registry: drone-registry.neocodenetworks.org
+    repo: drone-registry.neocodenetworks.org/mue/telnet-bridge
+    secrets: [ docker_username, docker_password ]
+    tag: prod
+    when:
+      event: deployment
+      environment: production

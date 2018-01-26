@@ -11,7 +11,7 @@
     "build": "gulp build"
   },
   "dependencies": {
-    "@mue/client-types": "file:../mue-server/client_types",
+    "@mue/client-types": "^0.0.1",
     "bluebird": "^3.5.1",
     "lodash": "^4.17.4",
     "nconf": "^0.10.0",
