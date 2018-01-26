@@ -1,6 +1,6 @@
 import "source-map-support/register";
 
-import { AuthRequest, AuthResponse, ClientToServer, CommandRequest, ErrorResponse, ServerToClient } from "@mue/client-types";
+import { AuthRequest, ClientToServer, ServerToClient } from "@mue/client-types";
 import * as net from "net";
 import * as readline from "readline";
 import * as socketio from "socket.io-client";
@@ -16,7 +16,7 @@ const server = net.createServer((cSocket) => {
     Logger.debug("CONNECT >", address);
 
     let isAuthenticated = false;
-    let authInfo: {"username": string, "password": string} = null;
+    let authInfo: AuthRequest = null;
 
     const sSocket = socketio(config.target_url);
     const tsock = new TypedEmitter<ClientToServer, ServerToClient>(sSocket);
