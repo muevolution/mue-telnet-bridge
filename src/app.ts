@@ -16,6 +16,7 @@ const server = net.createServer((cSocket) => {
     Logger.debug("CONNECT >", address);
 
     let isAuthenticated = false;
+    let authInfo: {"username": string, "password": string} = null;
 
     const sSocket = socketio(config.target_url);
     const tsock = new TypedEmitter<ClientToServer, ServerToClient>(sSocket);
@@ -45,14 +46,15 @@ const server = net.createServer((cSocket) => {
                     return cSocket.write("TS> Not enough auth arguments\n");
                 }
 
-                return tsock.emit("auth", {"username": split[1], "password": split[2]});
+                authInfo = {"username": split[1], "password": split[2]};
+                return tsock.emit("auth", authInfo);
             } else if (data.startsWith("quit")) {
                 cSocket.write("TS> Goodbye.\n");
                 tsock.emit("close", "Client closed");
                 sSocket.close();
                 cSocket.destroy();
             }
-        } else if (isAuthenticated) {
+        } else {
             return tsock.emit("command", {"line": data});
         }
     });
@@ -60,6 +62,12 @@ const server = net.createServer((cSocket) => {
     tsock.on("welcome", (motd) => {
         cSocket.write("SYS> Connected to telnet bridge\n");
         cSocket.write(`MOTD> ${motd}\n`);
+
+        if (!isAuthenticated && authInfo) {
+            // Reauthenticate with existing credentials
+            cSocket.write("TS> Reauthenticating...\n");
+            return tsock.emit("auth", authInfo);
+        }
     });
 
     tsock.on("auth", (data) => {
@@ -69,6 +77,7 @@ const server = net.createServer((cSocket) => {
         } else {
             cSocket.write(`AUTH> Failed: ${data.message}\n`);
             isAuthenticated = false;
+            authInfo = null;
         }
     });
 
@@ -81,7 +90,7 @@ const server = net.createServer((cSocket) => {
 
     tsock.on("close", (reason) => {
         Logger.debug("QUIT >", cSocket.address().address);
-        cSocket.write(`QUIT> ${reason ? reason : "No reason given"}`);
+        cSocket.write(`QUIT> ${reason ? reason : "No reason given"}\n`);
         sSocket.close();
         cSocket.destroy();
     });
@@ -93,9 +102,8 @@ const server = net.createServer((cSocket) => {
     });
 
     tsock.on("error", (err) => {
-        cSocket.write(`ERR> Got connection error: ${err}\n`);
-        sSocket.close();
-        cSocket.destroy();
+        cSocket.write(`ERR> Got connection error: ${err}\nTS> Attempting to reconnect.\n`);
+        isAuthenticated = false;
     });
 
 });
