@@ -1,10 +1,10 @@
 import "source-map-support/register";
 
+import { AuthRequest, AuthResponse, ClientToServer, CommandRequest, ErrorResponse, ServerToClient } from "@mue/client-types";
 import * as net from "net";
 import * as readline from "readline";
 import * as socketio from "socket.io-client";
 
-import { AuthRequest, AuthResponse, ClientToServer, CommandRequest, ErrorResponse, ServerToClient } from "mue-client-types";
 import { TypedEmitter } from "./common";
 import { config } from "./config";
 import { initLogger, Logger } from "./logging";
