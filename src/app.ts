@@ -63,7 +63,8 @@ const server = net.createServer((cSocket) => {
         cSocket.write("SYS> Connected to telnet bridge\n");
         cSocket.write(`MOTD> ${motd}\n`);
 
-        if (!isAuthenticated && authInfo) {
+        isAuthenticated = false;
+        if (authInfo) {
             // Reauthenticate with existing credentials
             cSocket.write("TS> Reauthenticating...\n");
             return tsock.emit("auth", authInfo);
