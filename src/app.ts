@@ -66,7 +66,7 @@ const server = net.createServer((cSocket) => {
         isAuthenticated = false;
         if (authInfo) {
             // Reauthenticate with existing credentials
-            cSocket.write("TS> Reauthenticating...\n");
+            cSocket.write("TS> It looks like we got disconnected. Reauthenticating...\n");
             return tsock.emit("auth", authInfo);
         }
     });
