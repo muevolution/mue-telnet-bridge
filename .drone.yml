@@ -1,9 +1,4 @@
 pipeline:
-  npm_auth:
-    image: robertstettner/drone-npm-auth
-    registry: https://drone-npm.neocodenetworks.org
-    secrets: [ npm_username, npm_password, npm_email ]
-
   build:
     image: node:carbon-alpine
     commands:

@@ -1,7 +1,6 @@
 // tslint:disable:max-classes-per-file
 
 import { MessageEvent } from "@mue/client-types";
-import { EventEmitter } from "events";
 
 import { Logger } from "./logging";
 
