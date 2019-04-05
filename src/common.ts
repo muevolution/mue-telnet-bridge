@@ -12,36 +12,22 @@ interface CompatibleEmitter {
 export class BaseTypedEmitter<O, I> {
     constructor(protected socket: CompatibleEmitter) {}
 
-    public emit<T extends keyof O, K extends O[T]>(event: T, data: K) {
+    public emit<T extends Extract<keyof O, string>, K extends O[T]>(event: T, data: K) {
         return this.socket.emit(event, data);
     }
 
-    public on<T extends keyof I, K extends I[T]>(event: T, listener: (data: K) => (Promise<any> | void), errorHandler?: (err: any) => any) {
+    public on<T extends Extract<keyof I, string>, K extends I[T]>(event: T, listener: (data: K) => (Promise<any> | void), errorHandler?: (err: any) => any) {
         return this.socket.on(event, (data: K) => {
-            let res: (Promise<any> | void);
-            try {
-                res = listener(data);
-            } catch (err) {
+            const res = Promise.resolve(listener(data));
+            res.then((d) => {
+                return d;
+            }).catch((err) => {
                 if (errorHandler) {
                     errorHandler(err);
                 } else {
                     Logger.error("typedOn got error", err);
-                    throw err;
                 }
-
-                return;
-            }
-
-            // Handle as a promise
-            if (res && res.then) {
-                res.catch((err) => {
-                    if (errorHandler) {
-                        errorHandler(err);
-                    } else {
-                        Logger.error("typedOn got error", err);
-                    }
-                });
-            }
+            });
         });
     }
 }

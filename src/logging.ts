@@ -1,13 +1,18 @@
 import * as winston from "winston";
-import { LoggerInstance, Winston } from "winston";
+
+const standardFormat = winston.format.combine(
+    winston.format.colorize(),
+    winston.format.simple()
+  );
 
 export function initLogger(logLevel: string = "debug") {
-    Logger = new (winston.Logger)({
+    Logger = winston.createLogger({
         "level": logLevel,
+        "format": standardFormat,
         "transports": [
-            new (winston.transports.Console)({})
+            new winston.transports.Console()
         ]
     });
 }
 
-export let Logger: LoggerInstance;
+export let Logger: winston.Logger;

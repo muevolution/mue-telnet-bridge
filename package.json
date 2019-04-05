@@ -8,31 +8,30 @@
   "scripts": {
     "start": "node build/app.js",
     "debug": "node --inspect build/app.js",
-    "build": "gulp build"
+    "build": "npm-run-all build:ts",
+    "build:ts": "tsc -b .",
+    "build:watch": "tsc -b . --watch",
+    "build:clean": "rm -rf build",
+    "build:lint": "tslint -p ."
   },
   "dependencies": {
-    "@mue/client-types": "^0.0.1",
-    "bluebird": "^3.5.1",
-    "lodash": "^4.17.4",
+    "@mue/client-types": "0.0.1",
+    "bluebird": "^3.5.4",
+    "lodash": "^4.17.11",
     "nconf": "^0.10.0",
-    "socket.io-client": "^2.0.4",
-    "source-map-support": "^0.5.0",
-    "winston": "^2.4.0"
+    "socket.io-client": "^2.2.0",
+    "source-map-support": "^0.5.11",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/bluebird": "^3.5.18",
-    "@types/lodash": "^4.14.89",
-    "@types/nconf": "0.0.36",
+    "@types/bluebird": "^3.5.26",
+    "@types/lodash": "^4.14.123",
+    "@types/nconf": "^0.10.0",
+    "@types/node": "^11.13.0",
     "@types/socket.io-client": "^1.4.32",
-    "@types/winston": "^2.3.7",
-    "del": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-sourcemaps": "^2.6.1",
-    "gulp-tslint": "^8.1.2",
-    "gulp-typescript": "^3.2.3",
-    "nodemon": "^1.14.3",
-    "tslint": "^5.8.0",
-    "tslint-language-service": "^0.9.7",
-    "typescript": "^2.6.2"
+    "nodemon": "^1.18.10",
+    "npm-run-all": "^4.1.5",
+    "tslint": "^5.15.0",
+    "typescript": "^3.4.1"
   }
 }

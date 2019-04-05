@@ -12,8 +12,8 @@ import { initLogger, Logger } from "./logging";
 initLogger();
 
 const server = net.createServer((cSocket) => {
-    const address = cSocket.address().address;
-    Logger.debug("CONNECT >", address);
+    const address = (cSocket.address() as net.AddressInfo).address;
+    Logger.debug("CONNECT > " + address);
 
     let isAuthenticated = false;
     let authInfo: AuthRequest = null;
@@ -26,7 +26,7 @@ const server = net.createServer((cSocket) => {
     });
 
     cSocket.on("end", () => {
-        Logger.debug("DISCONNECT >", address);
+        Logger.debug("DISCONNECT > " + address);
         tsock.emit("close", "User disconnected");
         sSocket.close();
     });
@@ -90,7 +90,7 @@ const server = net.createServer((cSocket) => {
     });
 
     tsock.on("close", (reason) => {
-        Logger.debug("QUIT >", cSocket.address().address);
+        Logger.debug("QUIT > " + (cSocket.address() as net.AddressInfo).address);
         cSocket.write(`QUIT> ${reason ? reason : "No reason given"}\n`);
         sSocket.close();
         cSocket.destroy();

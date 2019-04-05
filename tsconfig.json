@@ -1,22 +1,13 @@
 {
     "compilerOptions": {
-        "plugins": [
-            { "name": "tslint-language-service" }
-        ],
         "module": "commonjs",
         "target": "es2017",
         "lib": ["es2017"],
         "noImplicitAny": true,
+        "noUnusedLocals": true,
         "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "build",
-        "baseUrl": ".",
-        "paths": {
-            "*": [
-                "node_modules/*",
-                "src/types/*"
-            ]
-        }
     },
     "include": [
         "src/**/*"
