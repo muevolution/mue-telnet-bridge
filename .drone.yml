@@ -1,54 +1,93 @@
-pipeline:
-  build:
+kind: pipeline
+name: default
+
+steps:
+  - name: build
     image: node:carbon-alpine
     commands:
-      - echo "@mue:registry=https://drone-npm.neocodenetworks.org" >> .npmrc
       - npm install
-      - node_modules/.bin/gulp build
+      - npm run build
 
-  publish_docker_master:
+  - name: publish_docker_master
     image: plugins/docker
-    registry: drone-registry.neocodenetworks.org
-    repo: drone-registry.neocodenetworks.org/mue/telnet-bridge
-    secrets: [ docker_username, docker_password ]
-    tag: [ latest, master ]
+    settings:
+      registry: docker.cloud.neocodenetworks.org
+      repo: docker.cloud.neocodenetworks.org/mue/telnet-bridge
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      tags:
+        - latest
+        - master
     when:
       branch: master
       event: push
 
-  publish_docker_branch:
+  - name: publish_docker_branch
     image: plugins/docker
-    registry: drone-registry.neocodenetworks.org
-    repo: drone-registry.neocodenetworks.org/mue/telnet-bridge
-    secrets: [ docker_username, docker_password ]
-    tag: ${DRONE_BRANCH}
+    settings:
+      registry: docker.cloud.neocodenetworks.org
+      repo: docker.cloud.neocodenetworks.org/mue/telnet-bridge
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      tags: ${DRONE_BRANCH}
     when:
       branch:
         exclude: master
       event: push
 
-  publish_docker_tag:
+  - name: publish_docker_tag
     image: plugins/docker
-    registry: drone-registry.neocodenetworks.org
-    repo: drone-registry.neocodenetworks.org/mue/telnet-bridge
-    secrets: [ docker_username, docker_password ]
-    tag: ${DRONE_TAG}
+    settings:
+      registry: docker.cloud.neocodenetworks.org
+      repo: docker.cloud.neocodenetworks.org/mue/telnet-bridge
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      tags: ${DRONE_TAG}
     when:
       event: tag
 
-  publish_docker_to_prod:
+  - name: publish_docker_to_prod
     image: plugins/docker
-    registry: drone-registry.neocodenetworks.org
-    repo: drone-registry.neocodenetworks.org/mue/telnet-bridge
-    secrets: [ docker_username, docker_password ]
-    tag: prod
+    settings:
+      registry: docker.cloud.neocodenetworks.org
+      repo: docker.cloud.neocodenetworks.org/mue/telnet-bridge
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      tags: prod
     when:
-      event: deployment
-      environment: production
+      target: production
 
-  notify_neopush:
-    image: drone-registry.neocodenetworks.org/neopush/drone
-    pull: true
-    secrets: [ neopush_api_key ]
-    when:
-      status: [ failure, changed ]
+  - name: notify_neopush
+    image: docker.cloud.neocodenetworks.org/neopush/drone
+    pull: always
+    err_ignore: true
+    settings:
+      neopush_api_key:
+        from_secret: neopush_api_key
+
+---
+kind: secret
+name: docker_username
+get:
+  path: commonsecrets
+  name: docker_username
+---
+kind: secret
+name: docker_password
+get:
+  path: commonsecrets
+  name: docker_password
+---
+kind: secret
+name: neopush_api_key
+get:
+  path: commonsecrets
+  name: neopush_api_key
