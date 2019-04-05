@@ -8,7 +8,7 @@ steps:
       - npm install
       - npm run build
 
-  - name: publish_docker_master
+  - name: publish_docker
     image: plugins/docker
     settings:
       registry: docker.cloud.neocodenetworks.org
@@ -19,24 +19,8 @@ steps:
         from_secret: docker_password
       tags:
         - latest
-        - master
+        - ${DRONE_BRANCH}
     when:
-      branch: master
-      event: push
-
-  - name: publish_docker_branch
-    image: plugins/docker
-    settings:
-      registry: docker.cloud.neocodenetworks.org
-      repo: docker.cloud.neocodenetworks.org/mue/telnet-bridge
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-      tags: ${DRONE_BRANCH}
-    when:
-      branch:
-        exclude: master
       event: push
 
   - name: publish_docker_tag
@@ -70,7 +54,7 @@ steps:
     pull: always
     err_ignore: true
     settings:
-      neopush_api_key:
+      api_key:
         from_secret: neopush_api_key
 
 ---
