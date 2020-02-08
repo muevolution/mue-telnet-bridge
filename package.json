@@ -1,5 +1,5 @@
 {
-  "name": "@mue/telnet-bridge",
+  "name": "@muevolution/telnet-bridge",
   "version": "1.0.0",
   "description": "MUE Telnet Bridge",
   "author": "Kauko <kauko@biosynth.link>",
@@ -16,7 +16,7 @@
     "build:run": "concurrently \"npm run build:watch\" \"nodemon\""
   },
   "dependencies": {
-    "@mue/client-types": "0.0.1",
+    "@muevolution/client-types": "0.0.1",
     "bluebird": "^3.5.4",
     "lodash": "^4.17.11",
     "nconf": "^0.10.0",

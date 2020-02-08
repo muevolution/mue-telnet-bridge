@@ -1,6 +1,6 @@
 import "source-map-support/register";
 
-import { AuthRequest, ClientToServer, ServerToClient } from "@mue/client-types";
+import { AuthRequest, ClientToServer, ServerToClient } from "@muevolution/client-types";
 import * as net from "net";
 import * as readline from "readline";
 import * as socketio from "socket.io-client";

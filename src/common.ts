@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import { MessageEvent } from "@mue/client-types";
+import { MessageEvent } from "@muevolution/client-types";
 
 import { Logger } from "./logging";
 
