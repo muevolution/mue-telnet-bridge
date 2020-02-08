@@ -46,8 +46,17 @@ const server = net.createServer((cSocket) => {
                     return cSocket.write("TS> Not enough auth arguments\n");
                 }
 
-                authInfo = {"username": split[1], "password": split[2]};
+                authInfo = { "username": split[1], "password": split[2] };
                 return tsock.emit("auth", authInfo);
+            } else if (data.startsWith("register")) {
+                // Register the user
+                const split = data.split(" ");
+                if (split.length < 3) {
+                    return cSocket.write("TS> Not enough auth arguments\n");
+                }
+
+                authInfo = { "username": split[1], "password": split[2] };
+                return tsock.emit("auth", { ...authInfo, "isRegistration": true });
             } else if (data.startsWith("quit")) {
                 cSocket.write("TS> Goodbye.\n");
                 tsock.emit("close", "Client closed");
@@ -55,7 +64,7 @@ const server = net.createServer((cSocket) => {
                 cSocket.destroy();
             }
         } else {
-            return tsock.emit("command", {"line": data});
+            return tsock.emit("command", { "line": data });
         }
     });
 
